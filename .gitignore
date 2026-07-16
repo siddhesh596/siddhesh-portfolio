@@ -1,0 +1,12 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+
+# VS Code
+.vscode/
+
+# OS Files
+.DS_Store
+Thumbs.db
