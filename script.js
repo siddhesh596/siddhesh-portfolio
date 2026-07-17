@@ -1,189 +1,214 @@
-// ===============================
-// Mobile Navigation
-// ===============================
+// =========================
+// LOADER
+// =========================
 
-const menuBtn = document.querySelector(".menu-btn");
-const navLinks = document.querySelector(".nav-links");
+window.addEventListener("load", () => {
 
-if (menuBtn) {
-    menuBtn.addEventListener("click", () => {
-        navLinks.classList.toggle("active");
-    });
-}
+    const loader = document.getElementById("loader");
 
-document.querySelectorAll(".nav-links a").forEach(link => {
-    link.addEventListener("click", () => {
-        navLinks.classList.remove("active");
-    });
+    if (loader) {
+
+        loader.style.opacity = "0";
+
+        setTimeout(() => {
+
+            loader.style.display = "none";
+
+        }, 700);
+
+    }
+
 });
 
-// ===============================
-// Typing Animation
-// ===============================
+// =========================
+// TYPING EFFECT
+// =========================
 
-const words = [
-    "Junior Cloud Engineer",
-    "AWS Cloud Enthusiast",
-    "DevOps Engineer",
+const typingElement = document.getElementById("typing");
+
+const typingWords = [
+
+    "Cloud & DevOps Engineer",
+
+    "AWS Engineer",
+
     "Linux Administrator",
-    "Terraform Engineer",
-    "Cloud & DevOps Learner"
+
+    "Terraform Enthusiast",
+
+    "Docker & Jenkins"
+
 ];
 
-const typingElement = document.querySelector(".typing");
+let word = 0;
 
-let wordIndex = 0;
-let charIndex = 0;
+let letter = 0;
+
 let deleting = false;
 
-function typingEffect() {
+function typingAnimation() {
 
     if (!typingElement) return;
 
-    const currentWord = words[wordIndex];
+    const current = typingWords[word];
 
     if (!deleting) {
 
-        typingElement.textContent = currentWord.substring(0, charIndex);
-        charIndex++;
+        typingElement.textContent = current.substring(0, letter++);
 
-        if (charIndex > currentWord.length) {
+        if (letter > current.length) {
+
             deleting = true;
-            setTimeout(typingEffect, 1800);
+
+            setTimeout(typingAnimation, 1500);
+
             return;
+
         }
 
     } else {
 
-        typingElement.textContent = currentWord.substring(0, charIndex);
-        charIndex--;
+        typingElement.textContent = current.substring(0, letter--);
 
-        if (charIndex < 0) {
+        if (letter < 0) {
+
             deleting = false;
-            wordIndex++;
 
-            if (wordIndex >= words.length) {
-                wordIndex = 0;
-            }
+            word++;
+
+            if (word >= typingWords.length) word = 0;
+
         }
 
     }
 
-    setTimeout(typingEffect, deleting ? 60 : 120);
+    setTimeout(typingAnimation, deleting ? 60 : 120);
 
 }
 
-typingEffect();
+typingAnimation();
 
-// ===============================
-// Sticky Navbar
-// ===============================
+// =========================
+// STICKY NAVBAR
+// =========================
 
-const navbar = document.querySelector(".navbar");
+const header = document.querySelector("header");
 
 window.addEventListener("scroll", () => {
 
-    if (!navbar) return;
+    if (!header) return;
 
-    if (window.scrollY > 70) {
+    if (window.scrollY > 60) {
 
-        navbar.style.background = "rgba(15,23,42,0.95)";
-        navbar.style.backdropFilter = "blur(15px)";
-        navbar.style.boxShadow = "0 5px 20px rgba(0,0,0,0.3)";
+        header.classList.add("sticky");
 
     } else {
 
-        navbar.style.background = "rgba(15,23,42,0.8)";
-        navbar.style.boxShadow = "none";
+        header.classList.remove("sticky");
 
     }
 
 });
 
-// ===============================
-// Active Navigation Highlight
-// ===============================
+// =========================
+// ACTIVE MENU
+// =========================
 
-const sections = document.querySelectorAll("section[id]");
+const navItems = document.querySelectorAll(".nav-links a");
+
+const pageSections = document.querySelectorAll("section");
 
 window.addEventListener("scroll", () => {
 
-    let scrollY = window.pageYOffset;
+    let current = "";
 
-    sections.forEach(section => {
+    pageSections.forEach(section => {
 
-        const sectionHeight = section.offsetHeight;
-        const sectionTop = section.offsetTop - 150;
-        const sectionId = section.getAttribute("id");
+        const top = section.offsetTop - 120;
 
-        const navItem = document.querySelector(
-            ".nav-links a[href*=" + sectionId + "]"
-        );
+        const height = section.offsetHeight;
 
-        if (!navItem) return;
+        if (window.scrollY >= top && window.scrollY < top + height) {
 
-        if (
-            scrollY > sectionTop &&
-            scrollY <= sectionTop + sectionHeight
-        ) {
-            navItem.classList.add("active-link");
-        } else {
-            navItem.classList.remove("active-link");
+            current = section.id;
+
+        }
+
+    });
+
+    navItems.forEach(link => {
+
+        link.classList.remove("active");
+
+        if (link.getAttribute("href") === "#" + current) {
+
+            link.classList.add("active");
+
         }
 
     });
 
 });
 
-// ===============================
-// Scroll Reveal Animation
-// ===============================
+// =========================
+// SCROLL REVEAL
+// =========================
 
-const revealElements = document.querySelectorAll(
-    ".skill-card, .project-card, .timeline-item, .education-card, .about-text"
-);
+const revealObserver = new IntersectionObserver((entries) => {
 
-const observer = new IntersectionObserver(
+    entries.forEach(entry => {
 
-    entries => {
+        if (entry.isIntersecting) {
 
-        entries.forEach(entry => {
+            entry.target.classList.add("show");
 
-            if (entry.isIntersecting) {
+        }
 
-                entry.target.style.opacity = "1";
-                entry.target.style.transform = "translateY(0)";
-                observer.unobserve(entry.target);
+    });
 
-            }
+}, {
 
-        });
-
-    },
-
-    {
-        threshold: 0.2
-    }
-
-);
-
-revealElements.forEach(element => {
-
-    element.style.opacity = "0";
-    element.style.transform = "translateY(40px)";
-    element.style.transition = "all 0.8s ease";
-
-    observer.observe(element);
+    threshold: 0.15
 
 });
 
-// ===============================
-// Smooth Scroll
-// ===============================
+document.querySelectorAll(
+
+".skill-card,.project-card,.info-card,.stat-card,.timeline-item,.contact-card"
+
+).forEach(item => {
+
+    item.classList.add("hidden");
+
+    revealObserver.observe(item);
+
+});
+
+// =========================
+// MOBILE MENU
+// =========================
+
+const menuButton = document.querySelector(".menu-btn");
+
+const mobileMenu = document.querySelector(".nav-links");
+
+if (menuButton && mobileMenu) {
+
+    menuButton.addEventListener("click", () => {
+
+        mobileMenu.classList.toggle("open");
+
+    });
+
+}
+
+// =========================
+// SMOOTH SCROLL
+// =========================
 
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
-    anchor.addEventListener("click", function (e) {
+    anchor.addEventListener("click", function(e) {
 
         e.preventDefault();
 
@@ -191,9 +216,7 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
         if (target) {
 
-            window.scrollTo({
-
-                top: target.offsetTop - 70,
+            target.scrollIntoView({
 
                 behavior: "smooth"
 
@@ -205,125 +228,27 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 
 });
 
-// ===============================
-// Animated Counter
-// ===============================
+// =========================
+// SCROLL TO TOP
+// =========================
 
-const counters = document.querySelectorAll(".counter");
+const topButton = document.createElement("button");
 
-function runCounter(counter) {
+topButton.innerHTML = "↑";
 
-    const target = Number(counter.getAttribute("data-target"));
+topButton.id = "topBtn";
 
-    let count = 0;
-
-    const speed = target / 100;
-
-    const update = () => {
-
-        count += speed;
-
-        if (count < target) {
-
-            counter.innerText = Math.floor(count);
-
-            requestAnimationFrame(update);
-
-        } else {
-
-            counter.innerText = target;
-
-        }
-
-    };
-
-    update();
-
-}
-
-const counterObserver = new IntersectionObserver(entries => {
-
-    entries.forEach(entry => {
-
-        if (entry.isIntersecting) {
-
-            runCounter(entry.target);
-
-            counterObserver.unobserve(entry.target);
-
-        }
-
-    });
-
-});
-
-counters.forEach(counter => {
-
-    counterObserver.observe(counter);
-
-});
-
-// ===============================
-// Contact Form
-// ===============================
-
-const contactForm = document.querySelector(".contact-form");
-
-if (contactForm) {
-
-    contactForm.addEventListener("submit", function (e) {
-
-        e.preventDefault();
-
-        alert("Thank you! Your message has been sent successfully.");
-
-        contactForm.reset();
-
-    });
-
-}
-
-// ===============================
-// Scroll To Top Button
-// ===============================
-
-const scrollBtn = document.createElement("button");
-
-scrollBtn.innerHTML = "↑";
-
-scrollBtn.id = "scrollTop";
-
-document.body.appendChild(scrollBtn);
-
-scrollBtn.style.position = "fixed";
-scrollBtn.style.right = "20px";
-scrollBtn.style.bottom = "20px";
-scrollBtn.style.width = "50px";
-scrollBtn.style.height = "50px";
-scrollBtn.style.border = "none";
-scrollBtn.style.borderRadius = "50%";
-scrollBtn.style.background = "#38bdf8";
-scrollBtn.style.color = "#000";
-scrollBtn.style.fontSize = "22px";
-scrollBtn.style.cursor = "pointer";
-scrollBtn.style.display = "none";
-scrollBtn.style.zIndex = "999";
+document.body.appendChild(topButton);
 
 window.addEventListener("scroll", () => {
 
-    if (window.scrollY > 400) {
+    topButton.style.display =
 
-        scrollBtn.style.display = "block";
-
-    } else {
-
-        scrollBtn.style.display = "none";
-
-    }
+        window.scrollY > 400 ? "flex" : "none";
 
 });
 
-scrollBtn.addEventListener("click", () => {
+topButton.onclick = () => {
 
     window.scrollTo({
 
@@ -333,25 +258,26 @@ scrollBtn.addEventListener("click", () => {
 
     });
 
-});
+};
 
-// ===============================
-// Page Loader Animation
-// ===============================
+// =========================
+// FLOATING ICONS
+// =========================
 
-window.addEventListener("load", () => {
+document.querySelectorAll(".floating-icon").forEach(icon => {
 
-    document.body.style.opacity = "1";
-
-    document.body.style.transition = "opacity .5s";
+    icon.style.animation = "floating 5s ease-in-out infinite";
 
 });
 
-// ===============================
-// Console Message
-// ===============================
+// =========================
+// CURRENT YEAR
+// =========================
 
-console.log(
-    "%cWelcome to Siddhesh Pawar Portfolio 🚀",
-    "color:#38bdf8;font-size:20px;font-weight:bold;"
-);
+const year = document.getElementById("year");
+
+if (year) {
+
+    year.innerHTML = new Date().getFullYear();
+
+}
