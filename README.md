@@ -265,6 +265,8 @@ terraform apply
 
 GitHub: https://github.com/siddhesh596
 
+Website link: http://siddhesh-pawar-portfolio-2026.s3-website.ap-south-1.amazonaws.com
+
 LinkedIn: Add your LinkedIn profile URL here
 
 ---
